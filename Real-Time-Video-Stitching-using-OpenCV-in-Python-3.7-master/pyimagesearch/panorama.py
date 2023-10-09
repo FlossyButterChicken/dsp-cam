@@ -8,6 +8,7 @@ class Stitcher:
 		# determine if we are using OpenCV v3.X and initialize the
 		# cached homography matrix
 		self.isv3 = imutils.is_cv3()
+		self.isv4 = imutils.is_cv4()#to check if OpenCV is version 4.X
 		self.cachedH = None
 
 	def stitch(self, images, ratio=0.75, reprojThresh=4.0):
@@ -51,7 +52,10 @@ class Stitcher:
 			# detect and extract features from the image
 			descriptor = cv2.xfeatures2d.SIFT_create()
 			(kps, features) = descriptor.detectAndCompute(image, None)
-
+		# check if computer is using OpenCV 4.X
+		elif self.isv4:
+			descriptor = cv2.SIFT_create()
+			(kps, features) = descriptor.detectAndCompute(image, None)
 		# otherwise, we are using OpenCV 2.4.X
 		else:
 			# detect keypoints in the image
